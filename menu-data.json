@@ -1,0 +1,22 @@
+{
+    "categories": [
+        {"id": "hot-drinks", "name": "المشروبات الساخنة"},
+        {"id": "quick-sandwiches", "name": "السندويش السريع"},
+        {"id": "snacks-sweets", "name": "السناكات والحلويات"},
+        {"id": "cold-drinks", "name": "المشروبات الباردة"}
+    ],
+    "items": [
+        {"id":"coffee","name":"قهوة عربية","description":"قهوة عربية طازجة ومناسبة لبداية المحاضرة","price":5000,"category":"hot-drinks","available":true},
+        {"id":"cappuccino","name":"كابتشينو","description":"كابتشينو كريمي برغوة حليب خفيفة","price":9000,"category":"hot-drinks","available":true},
+        {"id":"tea-mint","name":"شاي ونعنع","description":"شاي ساخن مع نعنع منعش","price":4000,"category":"hot-drinks","available":true},
+        {"id":"shawarma","name":"سندويش شاورما","description":"شاورما دجاج مع مخلل وثوم","price":18000,"category":"quick-sandwiches","available":true},
+        {"id":"crispy","name":"سندويش كريسبي","description":"دجاج مقرمش مع صوص خاص وخضار","price":20000,"category":"quick-sandwiches","available":true},
+        {"id":"falafel","name":"سندويش فلافل","description":"فلافل ساخنة مع خضار وطحينة","price":7000,"category":"quick-sandwiches","available":true},
+        {"id":"potato","name":"بطاطا مقلية","description":"بطاطا ذهبية مع كاتشب","price":9000,"category":"quick-sandwiches","available":true},
+        {"id":"biscuit","name":"بسكويت","description":"بسكويت مغلف مناسب للاستراحة السريعة","price":4000,"category":"snacks-sweets","available":true},
+        {"id":"croissant","name":"كرواسان","description":"كرواسان طازج بالجبنة","price":8000,"category":"snacks-sweets","available":true},
+        {"id":"lemonade","name":"ليمون ونعنع بارد","description":"مشروب منعش ومحضر يومياً","price":8000,"category":"cold-drinks","available":true},
+        {"id":"water","name":"مياه معدنية","description":"عبوة مياه باردة","price":3000,"category":"cold-drinks","available":true},
+        {"id":"juice","name":"عصير فواكه","description":"عصير فواكه بارد","price":7000,"category":"cold-drinks","available":true}
+    ]
+}

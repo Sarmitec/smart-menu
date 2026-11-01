@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#c2410c">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="منيو إلكتروني تفاعلي لكافتيريا جامعة اللاذقية">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'">
+    <meta property="og:title" content="كافتيريا جامعة اللاذقية | طلبك السريع">
+    <meta property="og:description" content="اطلب وجبتك مسبقاً واستلمها بسرعة بين المحاضرات.">
+    <title>كافتيريا جامعة اللاذقية | طلبك السريع</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <!-- أضف الرابط الحقيقي للموقع مكان example.invalid قبل النشر. -->
+    <link rel="canonical" href="https://example.invalid/">
+    <link rel="stylesheet" href="styles.css">
+    <script src="theme-init.js"></script>
+</head>
+<body>
+    <noscript><div class="noscript">يرجى تفعيل JavaScript لعرض القائمة وإرسال الطلب.</div></noscript>
+    <header id="siteHeader" class="hero-section">
+        <div class="page-shell hero-inner">
+            <div class="hero-copy">
+                <h1>كافتيريا جامعة اللاذقية</h1>
+                <span class="cash-badge">الدفع عند الاستلام</span>
+            </div>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="تفعيل الوضع الليلي" aria-pressed="false"></button>
+        </div>
+    </header>
+    <main id="pageContent" class="page-shell main-content">
+        <section class="filter-panel" aria-label="البحث وأقسام القائمة">
+            <label class="sr-only" for="menuSearch">ابحث في القائمة</label>
+            <input id="menuSearch" class="form-input search-input" type="search" maxlength="60" placeholder="ابحث عن قهوة، شاورما..." autocomplete="off">
+            <label class="sr-only" for="categorySelect">اختر قسم القائمة</label>
+            <select id="categorySelect" class="form-input category-select" aria-label="اختر قسم القائمة"></select>
+            <div id="categoryFilters" class="scrollbar-hidden category-bar"></div>
+        </section>
+        <div id="statusMessage" class="status-message hidden" role="status"></div>
+        <section aria-labelledby="menuHeading">
+            <div class="section-heading">
+                <div><p class="eyebrow">منيو اليوم</p><h2 id="menuHeading">اختَر ما يناسبك</h2></div>
+                <span id="itemsCount" class="muted-text" aria-live="polite"></span>
+            </div>
+            <div id="menuGrid" class="menu-grid" aria-live="polite"></div>
+            <div id="noResults" class="empty-results hidden"><p>لا توجد نتائج مطابقة</p><button id="clearSearchButton" class="secondary-button" type="button">مسح البحث</button></div>
+        </section>
+    </main>
+    <button id="cartButton" class="cart-button" type="button" aria-controls="cartModal" aria-expanded="false"><span id="cartIcon" aria-hidden="true"></span><span>سلة المشتريات</span><span id="cartCount" class="cart-count" aria-live="polite">0</span></button>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="cartModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+        <section class="cart-panel">
+            <div class="panel-header"><div><p class="eyebrow">مراجعة الطلب</p><h2 id="cartTitle">سلة المشتريات</h2></div><button id="closeCartButton" class="icon-button" type="button" aria-label="إغلاق السلة">×</button></div>
+            <div id="cartView">
+                <div class="cart-scroll"><div id="cartItems" class="cart-items"></div><div id="emptyCart" class="empty-cart"><div id="emptyCartIcon" class="empty-icon" aria-hidden="true"></div><p>السلة فارغة حالياً</p><small>أضف وجبتك المفضلة من القائمة.</small></div></div>
+                <div class="cart-form-wrap">
+                    <div class="total-row"><span>المجموع</span><strong id="cartTotal">0 ل.س</strong></div>
+                    <p class="payment-note">الدفع عند الاستلام</p>
+                    <form id="orderForm" novalidate>
+                        <div><label class="form-label" for="tableNumber">رقم الطاولة <span>*</span></label><input id="tableNumber" class="form-input" type="text" inputmode="numeric" pattern="[0-9٠-٩]{1,2}" maxlength="2" required placeholder="من 1 إلى 99"></div>
+                        <div><label class="form-label" for="orderNotes">ملاحظات <small>(اختياري)</small></label><textarea id="orderNotes" class="form-input" maxlength="50" rows="2" placeholder="مثال: بدون سكر"></textarea></div>
+                        <p class="whatsapp-hint">عند الضغط سيتم إرسال طلبك مباشرة عبر واتساب.</p>
+                        <button id="submitOrderButton" class="primary-button" type="submit">إرسال الطلب عبر واتساب</button>
+                        <p id="formMessage" class="form-message hidden" role="alert"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
