@@ -1,5 +1,5 @@
 // رقم واتساب الكافتيريا بصيغة دولية، أرقام فقط.
-const CONFIG = { whatsappNumber: "963998495881", cafeLat: 35.539823, cafeLng: 35.795812, maxDistanceMeters: 500, maxAccuracyMeters: 150 };
+const CONFIG = { whatsappNumber: "963998495881", cafeLat: 35.545938, cafeLng: 35.769109, maxDistanceMeters: 500, maxAccuracyMeters: 150 };
 const STORAGE_KEYS = { cart: "cafe-cart", theme: "cafe-theme", lastOrder: "cafe-last-order" };
 const ORDER_COOLDOWN = 60000;
 const MAX_ITEM_QUANTITY = 10;
