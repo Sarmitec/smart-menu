@@ -1,14 +1,14 @@
 // رقم واتساب الكافتيريا بصيغة دولية، أرقام فقط.
-const CONFIG = { whatsappNumber: "963998495881" };
+const CONFIG = { whatsappNumber: "963998495881", cafeLat: 35.539823, cafeLng: 35.795812, maxDistanceMeters: 500, maxAccuracyMeters: 150 };
 const STORAGE_KEYS = { cart: "cafe-cart", theme: "cafe-theme", lastOrder: "cafe-last-order" };
 const ORDER_COOLDOWN = 60000;
 const MAX_ITEM_QUANTITY = 10;
 const MAX_TOTAL_ITEMS = 30;
 const FALLBACK_CATEGORY = "قسم آخر";
 const CATEGORY_ACCENTS = {
-    "hot-drinks": "#c2410c",
-    "quick-sandwiches": "#ea580c",
-    "snacks-sweets": "#b45309",
+    "hot-drinks": "#2563eb",
+    "quick-sandwiches": "#1d4ed8",
+    "snacks-sweets": "#1e40af",
     "cold-drinks": "#0369a1"
 };
 const memoryStorage = new Map();
@@ -103,16 +103,16 @@ function createMenuCard(item) {
     const name = document.createElement("h3"); name.className = "item-name"; name.textContent = item.name;
     info.append(name, textElement("p", "description", item.description));
     top.append(info); const footer = document.createElement("div"); footer.className = "card-footer"; footer.append(textElement("strong", "price", formatCurrency(item.price)));
-    const add = document.createElement("button"); add.className = "add-button"; add.type = "button"; add.dataset.addId = item.id; add.textContent = item.available ? "+ أضف للسلة" : "غير متوفر"; add.disabled = !item.available;
+    const add = document.createElement("button"); add.className = "add-button"; add.type = "button"; add.dataset.addId = item.id; add.setAttribute("aria-label", item.available ? "أضف للطلب" : "غير متوفر"); add.textContent = item.available ? "+ أضف للطلب" : "غير متوفر"; add.disabled = !item.available;
     footer.append(add); card.append(top, footer); return card;
 }
 function addToCart(itemId) {
     const item = menuItems.find((entry) => entry.id === itemId && entry.available); if (!item) return;
-    const quantity = cart.get(itemId) || 0; if (quantity >= MAX_ITEM_QUANTITY) return showToast("الحد الأقصى للصنف الواحد هو 10."); if (totalCartItems() >= MAX_TOTAL_ITEMS) return showToast("لا يمكن أن تتجاوز السلة 30 صنفاً.");
-    cart.set(itemId, quantity + 1); saveCart(); renderCart(); showToast("تمت الإضافة إلى السلة");
+    const quantity = cart.get(itemId) || 0; if (quantity >= MAX_ITEM_QUANTITY) return showToast("الحد الأقصى للصنف الواحد هو 10."); if (totalCartItems() >= MAX_TOTAL_ITEMS) return showToast("لا يمكن أن تتجاوز سلة الطلبات 30 صنفاً.");
+    cart.set(itemId, quantity + 1); saveCart(); renderCart(); showToast("تمت الإضافة إلى الطلب");
 }
 function updateCartQuantity(itemId, action, sourceButton) {
-    const current = cart.get(itemId) || 0; if (action === "increase") { if (current >= MAX_ITEM_QUANTITY) return showToast("الحد الأقصى للصنف الواحد هو 10."); if (totalCartItems() >= MAX_TOTAL_ITEMS) return showToast("لا يمكن أن تتجاوز السلة 30 صنفاً."); cart.set(itemId, current + 1); }
+    const current = cart.get(itemId) || 0; if (action === "increase") { if (current >= MAX_ITEM_QUANTITY) return showToast("الحد الأقصى للصنف الواحد هو 10."); if (totalCartItems() >= MAX_TOTAL_ITEMS) return showToast("لا يمكن أن تتجاوز سلة الطلبات 30 صنفاً."); cart.set(itemId, current + 1); }
     else if (current <= 1) cart.delete(itemId); else cart.set(itemId, current - 1);
     saveCart(); renderCart(); const target = cart.has(itemId) ? elements.cartItems.querySelector(`button[data-id="${itemId}"][data-cart-action="${action}"]`) : elements.cartItems.querySelector("button");
     (target || sourceButton || elements.closeCartButton).focus();
@@ -129,20 +129,54 @@ function createCartRow(entry) {
 }
 function quantityButton(label, action, id) { const button = document.createElement("button"); button.className = "quantity-button"; button.type = "button"; button.dataset.cartAction = action; button.dataset.id = id; button.setAttribute("aria-label", action === "increase" ? "زيادة الكمية" : "إنقاص الكمية"); button.textContent = label; return button; }
 
-function submitOrder(event) {
+async function submitOrder(event) {
     event.preventDefault(); hideFormMessage(); const remaining = getCooldown();
     if (remaining > 0) return showFormMessage(`يرجى الانتظار ${Math.ceil(remaining / 1000)} ثانية. هذا الفاصل فلتر مريح وليس حماية صارمة.`, "error");
-    if (!cart.size) return showFormMessage("أضف عنصراً واحداً على الأقل إلى السلة.", "error");
+    if (!cart.size) return showFormMessage("أضف عنصراً واحداً على الأقل إلى سلة الطلبات.", "error");
     const table = normalizeDigits(cleanInput(elements.tableNumber.value)), notes = cleanInput(elements.orderNotes.value);
     if (!/^(?:[1-9]|[1-9][0-9])$/.test(table)) return showFormMessage("رقم الطاولة يجب أن يكون بين 1 و99.", "error");
     if (notes.length > 50) return showFormMessage("الملاحظات يجب ألا تتجاوز 50 حرفاً.", "error");
     const order = buildOrder(table, notes); if (!order) return showFormMessage("تعذر تجهيز الطلب، حاول مرة أخرى.", "error");
     if (!/^\d{8,15}$/.test(CONFIG.whatsappNumber) || CONFIG.whatsappNumber.includes("X")) { console.error("Developer setup required: CONFIG.whatsappNumber must contain 8-15 digits."); return showFormMessage("تعذر تجهيز الطلب، حاول مرة أخرى.", "error"); }
-    safeSet(STORAGE_KEYS.lastOrder, String(Date.now()));
-    safeRemove(STORAGE_KEYS.cart);
-    cart.clear();
-    renderCart();
-    window.location.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(order.message)}`;
+    const originalButtonText = elements.submitOrderButton.textContent;
+    elements.submitOrderButton.disabled = true;
+    elements.submitOrderButton.textContent = "جارٍ التحقق من موقعك...";
+    try {
+        const position = await getPosition();
+        if (position.coords.accuracy > CONFIG.maxAccuracyMeters) return showFormMessage("دقة الموقع ضعيفة. اقترب من نافذة أو مكان مفتوح وأعد المحاولة.", "error");
+        const distance = haversineDistance(position.coords.latitude, position.coords.longitude, CONFIG.cafeLat, CONFIG.cafeLng);
+        if (distance > CONFIG.maxDistanceMeters) return showFormMessage("عذراً، إرسال الطلب متاح فقط لمن هم داخل نطاق 500 متر من الكافتيريا.", "error");
+        safeSet(STORAGE_KEYS.lastOrder, String(Date.now()));
+        safeRemove(STORAGE_KEYS.cart);
+        cart.clear();
+        renderCart();
+        window.location.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(order.message)}`;
+    } catch (error) {
+        showFormMessage(getGeolocationErrorMessage(error), "error");
+    } finally {
+        elements.submitOrderButton.disabled = false;
+        elements.submitOrderButton.textContent = originalButtonText;
+    }
+}
+function haversineDistance(latitude, longitude, targetLatitude, targetLongitude) {
+    const earthRadiusMeters = 6371000;
+    const latitudeDelta = (targetLatitude - latitude) * Math.PI / 180;
+    const longitudeDelta = (targetLongitude - longitude) * Math.PI / 180;
+    const latitudeRadians = latitude * Math.PI / 180;
+    const targetLatitudeRadians = targetLatitude * Math.PI / 180;
+    const haversine = Math.sin(latitudeDelta / 2) ** 2 + Math.cos(latitudeRadians) * Math.cos(targetLatitudeRadians) * Math.sin(longitudeDelta / 2) ** 2;
+    return 2 * earthRadiusMeters * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+}
+function getPosition() {
+    if (!("geolocation" in navigator)) return Promise.reject({ code: "UNSUPPORTED" });
+    return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }));
+}
+function getGeolocationErrorMessage(error) {
+    if (error.code === "UNSUPPORTED") return "متصفحك لا يدعم تحديد الموقع، لا يمكن إرسال الطلب.";
+    if (error.code === GeolocationPositionError.PERMISSION_DENIED) return "يجب السماح بالوصول إلى موقعك لإرسال الطلب. فعّل الموقع من إعدادات المتصفح ثم أعد المحاولة.";
+    if (error.code === GeolocationPositionError.POSITION_UNAVAILABLE) return "تعذّر تحديد موقعك. تأكد من تشغيل GPS وأعد المحاولة.";
+    if (error.code === GeolocationPositionError.TIMEOUT) return "استغرق تحديد الموقع وقتاً طويلاً. أعد المحاولة.";
+    return "تعذّر تحديد موقعك. تأكد من تشغيل GPS وأعد المحاولة.";
 }
 function buildOrder(table, notes) {
     const lines = []; let total = 0; if (totalCartItems() > MAX_TOTAL_ITEMS) return null;
@@ -187,7 +221,7 @@ function getCooldown() { const elapsed = Date.now() - Number(safeGet(STORAGE_KEY
 function safeGet(key) { try { return localStorage.getItem(key); } catch { return memoryStorage.get(key) || null; } }
 function safeSet(key, value) { try { localStorage.setItem(key, value); } catch { memoryStorage.set(key, value); } }
 function safeRemove(key) { try { localStorage.removeItem(key); } catch { memoryStorage.delete(key); } }
-function updateThemeColor(dark) { const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", dark ? "#17120f" : "#c2410c"); }
+function updateThemeColor(dark) { const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", dark ? "#0f172a" : "#2563eb"); }
 function createIcon(type) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24"); svg.setAttribute("width", "20"); svg.setAttribute("height", "20");

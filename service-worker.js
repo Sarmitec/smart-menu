@@ -1,4 +1,4 @@
-const CACHE_NAME = "latakia-cafeteria-v3";
+const CACHE_NAME = "latakia-cafeteria-v5";
 const CORE_FILES = ["./", "./index.html", "./styles.css", "./script.js", "./theme-init.js", "./menu-data.json", "./manifest.webmanifest", "./Cairo-Regular.woff2", "./favicon.svg", "./favicon-32.png", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (event) => {

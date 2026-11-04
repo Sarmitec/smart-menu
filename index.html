@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#c2410c">
+    <meta name="theme-color" content="#2563eb">
     <meta name="format-detection" content="telephone=no">
     <meta name="description" content="منيو إلكتروني تفاعلي لكافتيريا جامعة اللاذقية">
     <meta name="referrer" content="no-referrer">
@@ -50,20 +50,20 @@
             <div id="noResults" class="empty-results hidden"><p>لا توجد نتائج مطابقة</p><button id="clearSearchButton" class="secondary-button" type="button">مسح البحث</button></div>
         </section>
     </main>
-    <button id="cartButton" class="cart-button" type="button" aria-controls="cartModal" aria-expanded="false"><span id="cartIcon" aria-hidden="true"></span><span>سلة المشتريات</span><span id="cartCount" class="cart-count" aria-live="polite">0</span></button>
+    <button id="cartButton" class="cart-button" type="button" aria-controls="cartModal" aria-expanded="false"><span id="cartIcon" aria-hidden="true"></span><span>سلة الطلبات</span><span id="cartCount" class="cart-count" aria-live="polite">0</span></button>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="cartModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
         <section class="cart-panel">
-            <div class="panel-header"><div><p class="eyebrow">مراجعة الطلب</p><h2 id="cartTitle">سلة المشتريات</h2></div><button id="closeCartButton" class="icon-button" type="button" aria-label="إغلاق السلة">×</button></div>
+            <div class="panel-header"><div><p class="eyebrow">مراجعة الطلب</p><h2 id="cartTitle">سلة الطلبات</h2></div><button id="closeCartButton" class="icon-button" type="button" aria-label="إغلاق سلة الطلبات">×</button></div>
             <div id="cartView">
-                <div class="cart-scroll"><div id="cartItems" class="cart-items"></div><div id="emptyCart" class="empty-cart"><div id="emptyCartIcon" class="empty-icon" aria-hidden="true"></div><p>السلة فارغة حالياً</p><small>أضف وجبتك المفضلة من القائمة.</small></div></div>
+                <div class="cart-scroll"><div id="cartItems" class="cart-items"></div><div id="emptyCart" class="empty-cart"><div id="emptyCartIcon" class="empty-icon" aria-hidden="true"></div><p>سلة الطلبات فارغة حالياً</p><small>أضف وجبتك المفضلة من القائمة.</small></div></div>
                 <div class="cart-form-wrap">
                     <div class="total-row"><span>المجموع</span><strong id="cartTotal">0 ل.س</strong></div>
                     <p class="payment-note">الدفع عند الاستلام</p>
                     <form id="orderForm" novalidate>
                         <div><label class="form-label" for="tableNumber">رقم الطاولة <span>*</span></label><input id="tableNumber" class="form-input" type="text" inputmode="numeric" pattern="[0-9٠-٩]{1,2}" maxlength="2" required placeholder="من 1 إلى 99"></div>
                         <div><label class="form-label" for="orderNotes">ملاحظات <small>(اختياري)</small></label><textarea id="orderNotes" class="form-input" maxlength="50" rows="2" placeholder="مثال: بدون سكر"></textarea></div>
-                        <p class="whatsapp-hint">عند الضغط سيتم إرسال طلبك مباشرة عبر واتساب.</p>
+                        <p class="whatsapp-hint">لإرسال الطلب يجب السماح بتحديد موقعك، والطلب متاح فقط داخل نطاق 500 متر من الكافتيريا.</p>
                         <button id="submitOrderButton" class="primary-button" type="submit">إرسال الطلب عبر واتساب</button>
                         <p id="formMessage" class="form-message hidden" role="alert"></p>
                     </form>
